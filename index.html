@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小龍的魔法書 - Premium Mystic Edition</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-cream: #fffdf9;      
+            --nav-dark: rgba(30, 34, 47, 0.85);      
+            --pastel-yellow: #fffaf0; 
+            --pastel-purple: #f8f5ff; 
+            --pastel-green: #f4faf6;  
+            --text-dark: #2c3142;     
+            --text-sub: #697080;
+            --star-gold: #f4d068;     
+            --magic-glow-y: rgba(244, 208, 104, 0.35);
+            --magic-glow-p: rgba(182, 158, 255, 0.35);
+            --magic-glow-g: rgba(114, 219, 142, 0.3);
+        }
+
+        body { 
+            font-family: "Quicksand", "Noto Sans TC", sans-serif; 
+            margin: 0; 
+            background: var(--bg-cream); 
+            color: var(--text-dark); 
+            overflow-x: hidden;
+            background-image: radial-gradient(rgba(244, 208, 104, 0.08) 1.5px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        /* 夢幻極光背景氣泡群 */
+        .aura-bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.6;
+        }
+        .aura-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            mix-blend-mode: multiply;
+        }
+        .aura-1 { width: 600px; height: 600px; background: #fff2cc; top: -10%; left: -10%; }
+        .aura-2 { width: 500px; height: 500px; background: #f3e8ff; bottom: 10%; right: -5%; }
+        .aura-3 { width: 550px; height: 550px; background: #e6f9ec; top: 40%; left: 50%; transform: translateX(-50%); }
+
+        /* 仙女棒滑鼠粒子 */
+        .magic-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 14px;
+            color: var(--star-gold);
+            z-index: 9999;
+            text-shadow: 0 0 8px rgba(244, 208, 104, 0.8);
+            animation: particleFade 0.9s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+        @keyframes particleFade {
+            0% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
+            100% { transform: translate(-50%, -100%) scale(0) rotate(270deg); opacity: 0; }
+        }
+
+        /* 頂級毛玻璃導覽列 */
+        header {
+            background: var(--nav-dark);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 75px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+        .logo { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
+        .logo i { color: var(--star-gold); text-shadow: 0 0 10px rgba(244, 208, 104, 0.6); }
+        .nav { display: flex; list-style: none; gap: 8px; margin: 0; padding: 0; }
+        .nav-item { font-weight: 700; cursor: pointer; color: #cbd5e1; text-decoration: none; font-size: 0.9rem; padding: 10px 18px; border-radius: 20px; transition: all 0.4s; }
+        .nav-item:hover { color: white; background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+
+        /* ==================== 1. 奢華首頁大圖區塊 ==================== */
+        .hero-cinematic {
+            position: relative;
+            height: 88vh; 
+            min-height: 580px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 雙層光雕古典魔法陣 */
+        .giant-magic-ring-1 {
+            position: absolute;
+            width: 660px;
+            height: 660px;
+            border: 2px dashed rgba(244, 208, 104, 0.25);
+            border-radius: 50%;
+            animation: ringRotateClockwise 45s infinite linear;
+            pointer-events: none;
+        }
+        .giant-magic-ring-2 {
+            position: absolute;
+            width: 580px;
+            height: 580px;
+            border: 1px solid rgba(182, 158, 255, 0.2);
+            border-style: dotted;
+            border-radius: 50%;
+            animation: ringRotateCounter 30s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes ringRotateClockwise { 100% { transform: rotate(360deg); } }
+        @keyframes ringRotateCounter { 100% { transform: rotate(-360deg); } }
+
+        /* 浮空緩衝 3D 結構 */
+        .perspective-wrapper { perspective: 2000px; z-index: 10; }
+        .floating-book-card {
+            width: 360px;
+            height: 470px;
+            transform-style: preserve-3d;
+        }
+        .hero-swiper {
+            width: 100%; height: 100%;
+            border-radius: 36px;
+            box-shadow: 0 40px 80px rgba(145, 125, 90, 0.22);
+            border: 10px solid white;
+            background: #fff;
+        }
+        .hero-swiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .scroll-indicator {
+            position: absolute; bottom: 25px;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-sub); letter-spacing: 2px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-4px); } }
+
+        /* 內容主容器 */
+        .container { max-width: 960px; margin: 40px auto; padding: 0 25px; position: relative; z-index: 20; }
+        
+        /* 漸層炫光大標題 */
+        .category-title { 
+            font-size: 1.8rem; color: var(--text-dark); margin: 90px 0 35px;
+            display: flex; align-items: center; gap: 12px; font-weight: 700;
+            background: linear-gradient(135deg, #1e222f 0%, #475569 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .category-title span { -webkit-text-fill-color: initial; color: var(--star-gold); font-size: 1.6rem; text-shadow: 0 2px 8px rgba(244,208,104,0.4); }
+
+        /* 動態畫出式手繪分隔線 */
+        .section-divider-wrapper { position: relative; margin: 80px 0; display: flex; justify-content: center; align-items: center; }
+        .section-divider { width: 100%; border: none; border-top: 2px dashed #cbd5e1; transform: scaleX(0); transform-origin: center; }
+        .divider-spark { position: absolute; background: white; padding: 0 15px; color: var(--star-gold); font-size: 1.1rem; opacity: 0; transform: scale(0); transition: all 0.6s ease; }
+
+        .report-list { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        
+        /* ==================== 2. 精美工藝級卡片外觀與微互動 ==================== */
+        .report-item {
+            display: flex; border-radius: 28px; overflow: hidden;
+            height: 160px; position: relative; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transform-style: preserve-3d;
+            background-clip: padding-box;
+        }
+
+        .report-item.color-yellow { background: linear-gradient(145deg, #ffffff, var(--pastel-yellow)); }
+        .report-item.color-purple { background: linear-gradient(145deg, #ffffff, var(--pastel-purple)); }
+        .report-item.color-green { background: linear-gradient(145deg, #ffffff, var(--pastel-green)); }
+        
+        /* 滑鼠移入：極致精美的微光擴散、3D 浮空感 */
+        .report-item.color-yellow:hover { border-color: #f4d068; box-shadow: 0 20px 40px var(--magic-glow-y); }
+        .report-item.color-purple:hover { border-color: #cbb5ff; box-shadow: 0 20px 40px var(--magic-glow-p); }
+        .report-item.color-green:hover { border-color: #aae2b9; box-shadow: 0 20px 40px var(--magic-glow-g); }
+        
+        /* 左側照片縮圖（3D 懸浮與邊緣遮罩修飾） */
+        .item-img { width: 160px; min-width: 160px; height: 160px; background: #fff; overflow: hidden; position: relative; border-right: 1px solid rgba(0,0,0,0.02); }
+        .item-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .report-item:hover .item-img img { transform: scale(1.12) rotate(-1deg); }
+        
+        /* 右側細緻內文排版 */
+        .item-content { padding: 26px 30px; display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; padding-right: 150px; }
+        .item-content h3 { margin: 0 0 10px; font-size: 1.3rem; color: var(--text-dark); font-weight: 700; letter-spacing: 0.5px; transition: color 0.3s; }
+        .report-item:hover .item-content h3 { color: #1e222f; }
+        .item-content p { margin: 0; font-size: 0.92rem; color: var(--text-sub); line-height: 1.65; font-weight: 400; }
+        
+        /* 精美發光按鈕 */
+        .btn-browse {
+            position: absolute; right: 30px; bottom: 26px;
+            background: var(--text-dark); color: white; text-decoration: none;
+            padding: 10px 24px; font-size: 0.85rem; font-weight: 700;
+            border-radius: 16px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(44, 49, 66, 0.15);
+            display: flex; align-items: center; gap: 6px;
+            letter-spacing: 0.5px;
+        }
+        .report-item:hover .btn-browse {
+            background: #1e222f;
+            box-shadow: 0 6px 20px rgba(30, 34, 47, 0.35);
+            transform: scale(1.05);
+        }
+        .btn-browse::before { content: '🪄'; font-size: 0.85rem; opacity: 0; transition: 0.3s ease; transform: scale(0); }
+        .report-item:hover .btn-browse::before { opacity: 1; transform: scale(1); }
+
+        footer { text-align: center; padding: 65px; background: #fff; color: var(--text-sub); margin-top: 150px; border-top: 1px dashed #e2dad0; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            header { height: auto; padding: 15px 5%; flex-direction: column; gap: 12px; }
+            .nav { flex-wrap: wrap; justify-content: center; gap: 4px; }
+            .hero-cinematic { height: 72vh; min-height: 450px; }
+            .giant-magic-ring-1 { width: 420px; height: 420px; }
+            .giant-magic-ring-2 { width: 360px; height: 360px; }
+            .floating-book-card { width: 250px; height: 350px; }
+            .report-item { height: auto; flex-direction: column; border-radius: 24px; }
+            .item-img { width: 100%; height: 190px; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.02); }
+            .item-content { padding: 22px; padding-bottom: 80px; padding-right: 22px; }
+            .btn-browse { width: calc(100% - 44px); right: 22px; bottom: 18px; text-align: center; justify-content: center; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="aura-bg-container">
+    <div class="aura-bubble aura-1" id="aura1"></div>
+    <div class="aura-bubble aura-2" id="aura2"></div>
+    <div class="aura-bubble aura-3" id="aura3"></div>
+</div>
+
+<header>
+    <div class="logo"><i class="fa-solid fa-wand-magic-sparkles"></i> 小龍的魔法書</div>
+    <div class="nav">
+        <a href="#self" class="nav-item">🔮 自主學習</a>
+        <a href="#explore" class="nav-item">🧪 探究實作</a>
+        <a href="#extend" class="nav-item">📜 科目延伸</a>
+    </div>
+</header>
+
+<section class="hero-cinematic">
+    <div class="giant-magic-ring-1"></div>
+    <div class="giant-magic-ring-2"></div>
+    
+    <div class="perspective-wrapper">
+        <div class="floating-book-card" id="tiltCard">
+            <div class="swiper hero-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1BLQp_YwzvBMQ1EGHSptBdOSrSstkpBiq&sz=w1200" alt="精選"></div>
+                    <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1fcWpFNknNp4wrdjg6S929IdsBgVj3N-G&sz=w1200" alt="精選"></div>
+                    <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1mii-dhymV1mSH_chrA2lDDFfxR2egHvT&sz=w1200" alt="精選"></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator">
+        <span>向下捲動開啟精美章節</span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+</section>
+
+<div class="container">
+    
+    <h2 id="self" class="category-title-animate category-title"><span>🔮</span> 自主學習成果</h2>
+    <div class="report-list">
+        
+        <div class="report-item color-yellow GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1BLQp_YwzvBMQ1EGHSptBdOSrSstkpBiq&sz=w400" alt="營養">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-營養</h3>
+                <p>探索現代營養學與日常飲食調配，內含個人化膳食計畫與深入的健康數據追蹤分析。</p>
+            </div>
+            <a href="https://canva.link/1fpjzu0lrkaytij" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-purple GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1J5vemPYfe3BbquALo21iAequBNLQwBiK&sz=w400" alt="蔬果加工">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-蔬果加工</h3>
+                <p>食品加工技術實作！詳細紀錄蔬菜與水果的加工原理、實驗步驟與成品保存成果。</p>
+            </div>
+            <a href="https://canva.link/cgmaxnv4ekhbalb" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1QC5CujLedKgdHV2gyDfpJyZ19TPjz0IZ&sz=w400" alt="副食品">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-副食品分析</h3>
+                <p>從嬰幼兒發展與家政生物角度出發，解構不同成長階段副食品的營養配比與調製要點。</p>
+            </div>
+            <a href="https://canva.link/ekzjir69k3zza13" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-yellow GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1CNoDGUqpFgi2YYEuhn7mS9XNuI9MAnSG&sz=w400" alt="台大醫學">
+            </div>
+            <div class="item-content">
+                <h3>台大醫學營隊成果</h3>
+                <p>參與頂尖大學醫學營隊的實務操作與學習紀錄，點燃對醫學與生醫領域的深度探索熱情。</p>
+            </div>
+            <a href="https://canva.link/yr95uiu38jmteg7" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+    <div class="section-divider-wrapper">
+        <hr class="section-divider">
+        <div class="divider-spark">✨</div>
+    </div>
+
+    <h2 id="explore" class="category-title-animate category-title"><span>🧪</span> 探究與實作成果</h2>
+    <div class="report-list">
+
+        <div class="report-item color-purple GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1U5uxjaKjWM4wWr4LtL9kmISBK7syRo3r&sz=w400" alt="彭巴效應">
+            </div>
+            <div class="item-content">
+                <h3>探究與實作-彭巴效應</h3>
+                <p>針對特定自然現象展開科學探究，包含嚴謹的實驗假設、變因控制與動態數據模型分析。</p>
+            </div>
+            <a href="https://canva.link/yb6sksofiu0402j" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1UEbTnrr8-P9m-pIaAdYPeyREqC19w5kC&sz=w400" alt="骨牌">
+            </div>
+            <div class="item-content">
+                <h3>高二骨牌比賽</h3>
+                <p>團隊合作與機構設計的精彩碰撞！精密計算物理軌道、重力加速度與連鎖反應的歷程紀錄。</p>
+            </div>
+            <a href="https://canva.link/lkof6p5tg4qvmw4" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+    <div class="section-divider-wrapper">
+        <hr class="section-divider">
+        <div class="divider-spark">✨</div>
+    </div>
+
+    <h2 id="extend" class="category-title-animate category-title"><span>📜</span> 學科延伸專題</h2>
+    <div class="report-list">
+
+        <div class="report-item color-yellow GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1mii-dhymV1mSH_chrA2lDDFfxR2egHvT&sz=w400" alt="選修生物">
+            </div>
+            <div class="item-content">
+                <h3>選修生物 1</h3>
+                <p>高中生物核心課堂的延伸探索，針對細胞學、分子生物或生理機能進行進階文獻探討。</p>
+            </div>
+            <a href="https://canva.link/gb7k1j1pvpmwqh4" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-purple GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1NaJC_r5gr5XfXEbxjlBdhCugFaqviG07&sz=w400" alt="英文作文">
+            </div>
+            <div class="item-content">
+                <h3>英文作文選修</h3>
+                <p>精選多篇邏輯架構完整的寫作作品，展現個人英文批判性思考、修辭與進階語文素養。</p>
+            </div>
+            <a href="https://canva.link/u8k6po5bt7xmegp" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1vRDUiJX49vx9UqElPHq6RVWPb95SZSqy&sz=w400" alt="歷史">
+            </div>
+            <div class="item-content">
+                <h3>高一校外教學-歷史</h3>
+                <p>實地走訪古蹟與人文地景，結合在地文史脈絡與實地考察成果的整合性社會領域報告。</p>
+            </div>
+            <a href="https://canva.link/3gydso53e81s9it" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-yellow GSAP-card">
+            <div class="item-img">
+                <img src="https://drive.google.com/thumbnail?id=1dpdQnM1cmcrcEXcJj23ksrtAhAP2ykDL&sz=w400" alt="音樂海報">
+            </div>
+            <div class="item-content">
+                <h3>音樂海報設計</h3>
+                <p>結合美學與數位工具，深入剖析特定音樂流派或名家歷史的視覺創意專案。</p>
+            </div>
+            <a href="https://canva.link/z7bah2df97nga1x" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    ✦ 小龍的魔法書 ✧ 2026 學習歷程作品集 ✦
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 頂部精選 3D 卡牌輪播
+    new Swiper('.hero-swiper', {
+        loop: true,
+        effect: 'cards',
+        grabCursor: true,
+        autoplay: { delay: 3500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+    });
+
+    // 1. 首頁大圖：極細緻滑鼠 3D 物理視差緩衝
+    const tiltCard = document.getElementById('tiltCard');
+    const heroSection = document.querySelector('.hero-cinematic');
+
+    heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(tiltCard, {
+            rotateX: -y / 14,
+            rotateY: x / 14,
+            z: 25,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+    });
+
+    heroSection.addEventListener('mouseleave', () => {
+        gsap.to(tiltCard, { rotateX: 0, rotateY: 0, z: 0, duration: 0.8, ease: "power2.out" });
+    });
+
+    // 2. 滾動解鎖色彩：GSAP 極光氣泡緩慢飄移變色引擎
+    gsap.to("#aura1", { scrollTrigger: { trigger: ".container", start: "top bottom", end: "bottom bottom", scrub: 1 }, x: 150, y: 200, scale: 1.2 });
+    gsap.to("#aura2", { scrollTrigger: { trigger: ".container", start: "top bottom", end: "bottom bottom", scrub: 1 }, x: -200, y: -150, scale: 1.3 });
+    gsap.to("#aura3", { scrollTrigger: { trigger: ".container", start: "top bottom", end: "bottom bottom", scrub: 1 }, y: -300, scale: 0.9 });
+
+    // 3. 史詩級分類標題與手繪虛線延伸動畫
+    gsap.utils.toArray('.category-title-animate').forEach(title => {
+        gsap.from(title, {
+            scrollTrigger: { trigger: title, start: "top 90%", toggleActions: "play none none none" },
+            opacity: 0, y: 25, filter: "blur(8px)", duration: 0.8, ease: "power2.out"
+        });
+    });
+
+    // 手繪虛線像點火引信一樣畫出來
+    gsap.utils.toArray('.section-divider-wrapper').forEach(wrapper => {
+        const line = wrapper.querySelector('.section-divider');
+        const spark = wrapper.querySelector('.divider-spark');
+
+        gsap.to(line, {
+            scrollTrigger: { trigger: wrapper, start: "top 92%", toggleActions: "play none none none" },
+            scaleX: 1, duration: 1.2, ease: "power3.inOut"
+        });
+
+        gsap.to(spark, {
+            scrollTrigger: { trigger: wrapper, start: "top 92%", toggleActions: "play none none none" },
+            opacity: 1, scale: 1, delay: 0.4, duration: 0.5, ease: "back.out(1.5)"
+        });
+    });
+
+    // 4. 卡片高級翻轉解鎖：塔羅牌 3D 滑出 + 微幅縮放 + 清除衝突樣式
+    gsap.utils.toArray('.report-list').forEach(list => {
+        const cards = list.querySelectorAll('.GSAP-card');
+        
+        gsap.from(cards, {
+            scrollTrigger: { trigger: list, start: "top 88%", toggleActions: "play none none none" },
+            opacity: 0,
+            scale: 0.9,
+            y: 60,
+            rotateX: -15,
+            duration: 0.9,
+            stagger: 0.15,
+            ease: "back.out(1.2)",
+            clearProps: "all" // 動態結束後完全清除 transform，確保滑鼠 Hover 卡片 3D 互動不衝突！
+        });
+    });
+
+    // 5. 仙女棒滑鼠粒子
+    document.addEventListener('mousemove', function(e) {
+        if (Math.random() > 0.18) return; 
+        const particle = document.createElement('div');
+        particle.className = 'magic-particle';
+        const symbols = ['✦', '✧', '★', '•'];
+        particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        particle.style.left = e.clientX + 'px';
+        particle.style.top = e.clientY + 'px';
+        const size = Math.random() * 12 + 6;
+        particle.style.fontSize = size + 'px';
+        document.body.appendChild(particle);
+        setTimeout(() => { particle.remove(); }, 900);
+    });
+</script>
+
+</body>
+</html>
